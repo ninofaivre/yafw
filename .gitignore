@@ -1,0 +1,4 @@
+.zig-cache
+build.zig.zon
+deps
+zig-out
