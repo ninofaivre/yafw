@@ -1,6 +1,8 @@
 const std = @import("std");
 const posix = std.posix;
 const IN = std.os.linux.IN;
+
+const stdOutWriter = std.io.getStdOut().writer();
 const PathIt = std.mem.SplitIterator(u8, .scalar);
 
 const cli = @import("cli/root.zig");
@@ -92,7 +94,7 @@ fn updateWatch(
 ) anyerror!void {
     var currPathIt = filePathIt;
     if (currPathIt.peek() == null and mode == .each)
-        std.debug.print("{s}\n", .{currPathIt.buffer});
+        try stdOutWriter.print("{s}\n", .{currPathIt.buffer});
     const wd = if (currPathIt.peek() == null)
         posix.inotify_add_watch(
             inotifyFd, currPathIt.buffer,
@@ -199,7 +201,7 @@ fn createHandler(
         try updateWatch(data.wds, pathIt, inotifyFd, data.mode);
     }
     if (checkExists and data.mode == .all and data.wds.isEveryFilePathNull())
-        std.debug.print("\n", .{});
+        try stdOutWriter.print("\n", .{});
 }
 
 fn watch(wds: *Wds, inotifyFd: i32, mode: cli.Mode) !void {
