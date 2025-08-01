@@ -64,6 +64,8 @@
         zigWrapperLibs = attrs.buildInputs or [];
       });
 
+      packages.${name} = packages.default;
+
       # For bundling with nix bundle for running outside of nix
       # example: https://github.com/ralismark/nix-appimage
       apps.bundle = {
